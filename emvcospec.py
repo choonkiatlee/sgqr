@@ -26,9 +26,9 @@ class Template:
 class ObjInfo:
     tagid: str
     name: str
-    format_: str
-    length: int
-    presence: str
+    format_: str = "ans"
+    length: int = -1
+    presence: str = "O"
     template: Dict = dataclasses.field(default_factory=(lambda: {}))
     
 def repeated_obj_info(obj_info, from_id, to_id):
