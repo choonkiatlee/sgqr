@@ -5,33 +5,42 @@ Created on Sat Mar  6 08:18:52 2021
 @author: choon
 """
 
-from emvcospec import ObjInfo, repeated_obj_info
+from emvcospec import ObjInfo, repeated_obj_info, Template
+from emvcomappinginfo import make_root_obj_id_map
 
 
-MASTERCARD_ACCOUNT_INFO_TEMPLATE = {
+_DEFAULT_ACCOUNT_INFO_TEMPLATE = {
+    "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "O"),  
+}
+
+
+_MASTERCARD_ACCOUNT_INFO_TEMPLATE = {
+    "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "O"),
     "04": ObjInfo("04", "Mastercard ID", "N", -1, "M")
 }
 
-AMERICAN_EXPRESS_ACCOUNT_INFO_TEMPLATE = {
+_AMERICAN_EXPRESS_ACCOUNT_INFO_TEMPLATE = {
+    "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "O"),
     "11": ObjInfo("11", "Amex ID 11", "N", -1, "O"),
     "12": ObjInfo("12", "Amex ID 12", "N", -1, "O"),
 }
 
-UNION_PAY_INTERNATIONAL_ACCOUNT_INFO_TEMPLATE = {
+_UNION_PAY_INTERNATIONAL_ACCOUNT_INFO_TEMPLATE = {
+    "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "O"),
     "15": ObjInfo("15", "UPo ID", "N", -1, "O"),
 }
 
-DASH_ACCOUNT_INFO_TEMPLATE = {
+_DASH_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant Account", "ans", -1, "O"),
 }
 
-OCBC_P2P_ACCOUNT_INFO_TEMPLATE = {
+_OCBC_P2P_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant Account", "ans", -1, "O")
 }
 
-EZ_LINK_ACCOUNT_INFO_TEMPLATE = {
+_EZ_LINK_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant ID", "ans", -1, "O"),
     "02": ObjInfo("02", "SGQR Indicator"),
@@ -39,18 +48,18 @@ EZ_LINK_ACCOUNT_INFO_TEMPLATE = {
     "04": ObjInfo("04", "Verification Code")
 }
 
-GRAB_PAY_ACCOUNT_INFO_TEMPLATE = {
+_GRAB_PAY_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant ID", "ans", -1, "O"),
 }
 
-DBS_PAYLAH_ACCOUNT_INFO_TEMPLATE = {
+_DBS_PAYLAH_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "QR Transaction Ref ID", "ans", -1, "O"),
     "02": ObjInfo("02", "QR ID")
 }
 
-NETS_ACCOUNT_INFO_TEMPLATE = {
+_NETS_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "QR Meta Data", "ans", -1, "O"),
     "02": ObjInfo("02", "Merchant ID", "ans", -1, "O"),
@@ -59,18 +68,18 @@ NETS_ACCOUNT_INFO_TEMPLATE = {
     "99": ObjInfo("99", "Signature", "ans", -1, "O"),
 }
 
-WECHAT_PAY_ACCOUNT_INFO_TEMPLATE = {
+_WECHAT_PAY_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant Account", "ans", -1, "O"),
     "02": ObjInfo("02", "Terminal ID", "ans", -1, "O"),
 }
 
-UOB_ACCOUNT_INFO_TEMPLATE = {
+_UOB_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Merchant Account", "ans", -1, "O"),
 }
 
-PAYNOW_ACCOUNT_INFO_TEMPLATE = {
+_PAYNOW_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     "01": ObjInfo("01", "Proxy Type", "N", 1, "M"),
     "02": ObjInfo("02", "Proxy Value", "ans", -1, "O"),
@@ -90,26 +99,34 @@ SG_MERCHANT_ID_TEMPLATE = {
     "07": ObjInfo("07", "New Revision Date", "ans", -1, "O"),
 }
 
-SGQR_ACCOUNT_INFO_TEMPLATE = {
+_SGQR_ACCOUNT_INFO_TEMPLATE = {
     "00": ObjInfo("00", "Globally Unique Identifier", "ans", -1, "M"),
     **repeated_obj_info(ObjInfo("", "Payment network specific", "S", -1, "O"), 1, 100),
     "51": ObjInfo("51", "SG Merchant ID", "ans", -1, "O", SG_MERCHANT_ID_TEMPLATE),
-    "52": ObjInfo("52", "MCC"),
-    "53": ObjInfo("53", "Transaction Currency"),
-    "58": ObjInfo("58", "Country Code"),
-    "59": ObjInfo("59", "Merchant Name"),
-    "60": ObjInfo("60", "Merchant City"),
-    "61": ObjInfo("61", "Postal Code")
 }
 
-SGQR_ACCOUNT_INFO_TEMPLATE_MAP = {
-    "0015SG.COM.DASH.WWW": DASH_ACCOUNT_INFO_TEMPLATE,
-    "0011SG.COM.OCBC": OCBC_P2P_ACCOUNT_INFO_TEMPLATE,
-    "0013SG.COM.EZLINK": EZ_LINK_ACCOUNT_INFO_TEMPLATE,
-    "0008COM.GRAB": GRAB_PAY_ACCOUNT_INFO_TEMPLATE,
-    "0007COM.DBS": DBS_PAYLAH_ACCOUNT_INFO_TEMPLATE,
-    "0011SG.COM.NETS": NETS_ACCOUNT_INFO_TEMPLATE,
-    "0017COM.QQ.WEIXIN.PAY": WECHAT_PAY_ACCOUNT_INFO_TEMPLATE,
-    "0010SG.COM.UOB": UOB_ACCOUNT_INFO_TEMPLATE,
-    "0009SG.PAYNOW": PAYNOW_ACCOUNT_INFO_TEMPLATE,
-}
+SGQR_ACCOUNT_INFO_TEMPLATE_MAP = Template(
+    {
+        "SG.COM.DASH.WWW": Template(_DASH_ACCOUNT_INFO_TEMPLATE),
+        "SG.COM.OCBC": Template(_OCBC_P2P_ACCOUNT_INFO_TEMPLATE),
+        "SG.COM.EZLINK": Template(_EZ_LINK_ACCOUNT_INFO_TEMPLATE),
+        "COM.GRAB": Template(_GRAB_PAY_ACCOUNT_INFO_TEMPLATE),
+        "COM.DBS": Template(_DBS_PAYLAH_ACCOUNT_INFO_TEMPLATE),
+        "SG.COM.NETS": Template(_NETS_ACCOUNT_INFO_TEMPLATE),
+        "COM.QQ.WEIXIN.PAY": Template(_WECHAT_PAY_ACCOUNT_INFO_TEMPLATE),
+        "SG.COM.UOB": Template(_UOB_ACCOUNT_INFO_TEMPLATE),
+        "SG.PAYNOW": Template(_PAYNOW_ACCOUNT_INFO_TEMPLATE),
+        "SG.SGQR": Template(_SGQR_ACCOUNT_INFO_TEMPLATE)
+    },
+    keyon = "guid",
+    default_obj_id_map = _DEFAULT_ACCOUNT_INFO_TEMPLATE
+)
+
+def sgqr_root_obj_id_map():
+    overridden_objs = {
+        **repeated_obj_info(ObjInfo("", "Merchant Account Information", "ans", -1, "O", SGQR_ACCOUNT_INFO_TEMPLATE_MAP), 26, 52),
+        "51": ObjInfo("51", "SG Merchant ID", "ans", -1, "O", Template(SG_MERCHANT_ID_TEMPLATE))
+    }
+    return make_root_obj_id_map(
+        overridden_objs
+    )
